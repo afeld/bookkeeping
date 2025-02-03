@@ -1,7 +1,7 @@
 // https://github.com/freshbooks/freshbooks-nodejs-sdk/blob/main/packages/api/README.md
 
 // import { Client } from "@freshbooks/api";
-import freshbooks from "@freshbooks/api";
+import freshbooks, { Client as ClientType } from "@freshbooks/api";
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import open from "open";
@@ -29,9 +29,7 @@ const createClient = () => {
   });
 };
 
-const client = createClient();
-
-const authorize = async () => {
+const authorize = async (client: ClientType) => {
   const authUrl = client.getAuthRequestUrl([
     "user:profile:read",
     // from example at
@@ -91,7 +89,7 @@ const authorize = async () => {
   console.log(token);
 };
 
-const getBusinessID = async () => {
+const getBusinessID = async (client: ClientType) => {
   const identity = await client.users.me();
 
   if (identity.ok === true) {
@@ -102,27 +100,33 @@ const getBusinessID = async () => {
   }
 };
 
-console.log("Authorizing...");
-await authorize();
+const run = async () => {
+  const client = createClient();
 
-console.log("Fetching business...");
-const businessID = await getBusinessID();
-console.log(businessID);
+  console.log("Authorizing...");
+  await authorize(client);
 
-// const entries = await client.timeEntries.list(businessID);
-// console.log(entries);
+  console.log("Fetching business...");
+  const businessID = await getBusinessID(client);
+  console.log(businessID);
 
-console.log("Creating time entry");
-await client.timeEntries.create(
-  // test entry
-  {
-    billable: true,
-    clientId: 198915, // Dimagi
-    duration: 60,
-    isLogged: true,
-    note: "test entry",
-    projectId: 12667759, // SOW 3
-    startedAt: new Date(),
-  },
-  businessID
-);
+  // const entries = await client.timeEntries.list(businessID);
+  // console.log(entries);
+
+  console.log("Creating time entry");
+  await client.timeEntries.create(
+    // test entry
+    {
+      billable: true,
+      clientId: 198915, // Dimagi
+      duration: 60,
+      isLogged: true,
+      note: "test entry",
+      projectId: 12667759, // SOW 3
+      startedAt: new Date(),
+    },
+    businessID
+  );
+};
+
+run();
