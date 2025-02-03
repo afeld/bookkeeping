@@ -28,14 +28,16 @@ const client = new Client(clientId, {
 
 const authorize = async () => {
   const authUrl = client.getAuthRequestUrl([
-    "user:profile:read",
+    "user:business:read",
     "user:clients:read",
+    "user:profile:read",
     "user:time_entries:read",
     "user:time_entries:write",
   ]);
   await open(authUrl, { app: { name: "firefox" } });
   const code = await rl.question("Enter the authorization code: ");
-  await client.getAccessToken(code);
+  const token = await client.getAccessToken(code);
+  console.log(token);
 };
 
 const getBusinessID = async () => {
@@ -52,5 +54,8 @@ const getBusinessID = async () => {
 await authorize();
 const businessID = await getBusinessID();
 console.log(businessID);
+
+const entries = await client.timeEntries.list(businessID);
+console.log(entries);
 
 rl.close();
