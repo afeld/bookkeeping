@@ -9,21 +9,27 @@ import { read as opRead } from "@1password/op-js";
 
 const { Client } = freshbooks;
 
-const clientId = opRead.parse(
-  "op://v7ogqjxnttwfv527qvfjpf7fcq/FreshBooks/API/Client ID"
-);
-const clientSecret = opRead.parse(
-  "op://v7ogqjxnttwfv527qvfjpf7fcq/FreshBooks/API/Client Secret"
-);
+const createClient = () => {
+  const clientId = opRead.parse(
+    "op://v7ogqjxnttwfv527qvfjpf7fcq/FreshBooks/API/Client ID"
+  );
+  const clientSecret = opRead.parse(
+    "op://v7ogqjxnttwfv527qvfjpf7fcq/FreshBooks/API/Client Secret"
+  );
 
-if (!clientId || !clientSecret) {
-  throw new Error("Missing FreshBooks application client ID or client secret");
-}
+  if (!clientId || !clientSecret) {
+    throw new Error(
+      "Missing FreshBooks application client ID or client secret"
+    );
+  }
 
-const client = new Client(clientId, {
-  clientSecret,
-  redirectUri: "https://afeld.me",
-});
+  return new Client(clientId, {
+    clientSecret,
+    redirectUri: "https://afeld.me",
+  });
+};
+
+const client = createClient();
 
 const authorize = async () => {
   const authUrl = client.getAuthRequestUrl([
