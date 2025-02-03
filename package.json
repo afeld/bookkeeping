@@ -3,10 +3,10 @@
   "main": "index.js",
   "type": "module",
   "dependencies": {
+    "@1password/op-js": "^0.1.13",
     "@freshbooks/api": "^4.1.0",
-    "open": "^10.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.13.0"
+    "@types/node": "^22.13.0",
+    "open": "^10.1.0",
+    "tsx": "^4.19.2"
   }
 }
