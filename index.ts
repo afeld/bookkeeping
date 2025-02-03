@@ -8,6 +8,7 @@ import open from "open";
 import { read as opRead } from "@1password/op-js";
 
 const { Client } = freshbooks;
+const rl = readline.createInterface({ input, output });
 
 const clientId = opRead.parse(
   "op://v7ogqjxnttwfv527qvfjpf7fcq/FreshBooks/API/Client ID"
@@ -33,12 +34,23 @@ const authorize = async () => {
     "user:time_entries:write",
   ]);
   await open(authUrl, { app: { name: "firefox" } });
-
-  const rl = readline.createInterface({ input, output });
   const code = await rl.question("Enter the authorization code: ");
-  rl.close();
-
   await client.getAccessToken(code);
 };
 
+const getBusinessID = async () => {
+  const identity = await client.users.me();
+
+  if (identity.ok === true) {
+    const business = identity.data.businessMemberships[0];
+    return business.id;
+  } else {
+    throw new Error("Failed to fetch business ID");
+  }
+};
+
 await authorize();
+const businessID = await getBusinessID();
+console.log(businessID);
+
+rl.close();
