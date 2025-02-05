@@ -6,6 +6,7 @@
     "@1password/op-js": "^0.1.13",
     "@freshbooks/api": "^4.1.0",
     "@freshbooks/app": "^3.0.7",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.13.0",
     "open": "^10.1.0",
     "passport": "^0.7.0",
